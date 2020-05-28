@@ -13,6 +13,8 @@ import "regenerator-runtime/runtime";
 /**
  * DOM modules
  */
+import './assets/modules/typeahead/typeahead';
+import './assets/modules/address-input/address-input';
 import './assets/modules/uac/uac';
 import './assets/modules/character-check';
 import './assets/previous-link';
