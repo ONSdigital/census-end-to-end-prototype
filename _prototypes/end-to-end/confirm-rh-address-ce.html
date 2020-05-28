@@ -1,0 +1,149 @@
+---
+title: Version 1
+project: End to end prototype
+globalcss: false
+layout: eq-default-extras
+assetPrefixUrl: https://sdc-global-design-patterns.netlify.com
+hideSaveLater: true
+logoUrl: ../home
+---
+
+<link rel="stylesheet" href="../style.css"/>
+<div class="page__subheader">
+    <div class="container">
+        <a class="js-previous-link" href="../test-address?edit=true">Previous</a>
+    </div>
+</div>
+
+<div class="page__container container">
+    <div class="grid grid--reverse">
+        <div class="grid__col col-4@m">
+        </div>
+        <div class="grid__col col-8@m">
+            <main role="main" id="main" class="page__main">
+                <form name="trav" class="form qa-questionnaire-form u-mb-xl"
+                      role="form" autocomplete="new-password" novalidate="">
+                    <div class="group">
+                        <div class="block">
+                            <section class="section">
+                                <div class="question u-mb-s">
+                                    <h1 class="question__title u-fs-xl">
+                                        Are you a resident or manager of this accommodation?
+                                    </h1>
+                                </div>
+
+                                <p for="address-correct-yes"><span
+                                        class="full-address-text">Address not
+                                    set</span></p>
+
+                                <div class="answer__fields js-fields">
+                                    <div class="field field--radio field--multiplechoice ">
+                                        <fieldset>
+                                            <div class="field__item js-focusable-box">
+                                                <input autocomplete="new-password" class="input input--radio js-focusable" type="radio"
+                                                       name="address-correct" id="address-correct-yes">
+                                                <label class="label label--inline" for="address-correct-yes">Resident</label>
+                                            </div>
+                                            <div class="field__item js-focusable-box">
+                                                <input autocomplete="new-password" class="input input--radio js-focusable" type="radio"
+                                                       name="address-correct" id="address-correct-no">
+                                                <label class="label label--inline venus" for="address-correct-no">
+                                                Manager
+                                                    <br>
+                                                    <span class="label__description label--negative">
+                                                        This is the person responsible for answering questions about the accommodation
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <button class="qa-btn-submit btn btn-submit btn--primary btn--lg u-mt-xl" data-qa="btn-submit" type="submit"
+                            name="action[save_continue]">Continue
+                    </button>
+                </form>
+            </main>
+        </div>
+    </div>
+
+</div>
+
+<script src='/js/compiled/end-to-end/bundle.js'></script>
+
+
+<script>
+	var yesbox = document.getElementById("address-correct-yes");
+	var changebox = document.getElementById("address-correct-change");
+    var urlParams = new URLSearchParams(window.location.search);
+    var previousPage = urlParams.get('previous');
+    var addressParam = urlParams.get('address');
+    var storageAPI = window.ONS.storage;
+    var previousPage = urlParams.get('previous');
+    var currentJourney = urlParams.get('current-journey');
+    var currentPage = 'confirm-rh-address';
+    var addressCountry = sessionStorage.getItem('address-country');
+
+	$('.qa-btn-submit').on('click', function (e) {
+        e.preventDefault();
+
+        /**
+        * Routing
+        */
+        if (yesbox.checked) {
+            var url  = '../uac-request-enter-ce-room';
+        }
+        else {
+            var url = '../paper-request-ce-managers';
+        }
+        window.location.href = url + '?' + 'previous=' + currentPage + '&' + 'current-journey=' + currentJourney;
+    });
+
+    if (addressParam) {
+        var address = JSON.parse(addressParam);
+
+        var addressParts = [];
+        
+
+        Object.keys(address)
+            .filter(function(key) { return !!address[key] })
+            .forEach(function (key) {
+                sessionStorage.setItem(key, address[key]);
+                addressParts.push(address[key]);
+            })
+        
+        sessionStorage.setItem('address', addressParts.join(', '));
+    }
+
+	$(function () {
+	  if(sessionStorage.getItem('address')) {
+		$('.full-address-text').html((sessionStorage.getItem('address') || '').replace(/,/g, '<br />'));
+      }
+	});
+
+	$(function () {
+		var oneWeekAgo = new Date();
+		oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+		var options = {year: 'numeric', month: 'long', day: 'numeric'};
+		$('.one-week-ago').text(oneWeekAgo.toLocaleString('en-GB', options));
+	});
+
+    function updateAllLinks() {
+        if (previousPage === 'uac-entry') {
+            $('.js-previous-link').hide();
+        } else {
+            $('.js-previous-link').attr('href', '../' + previousPage + '?' + 'previous=' + 'uac-request-address' + '&current-journey=' + currentJourney + '&edit=true');
+        }
+    }
+
+    function updateAnswer() {
+        if (addressCountry === 'S') {
+            $('.js-change-address').hide();
+        }
+    }
+
+    $(updateAllLinks);
+    $(updateAnswer);
+</script>
