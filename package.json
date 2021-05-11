@@ -73,7 +73,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "dice-coefficient": "^1.0.5",
     "fuse.js": "^3.6.1",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "regenerator-runtime": "^0.13.3",
     "sort-by-typescript": "^1.0.2",
     "url-search-params-polyfill": "^5.1.0"
